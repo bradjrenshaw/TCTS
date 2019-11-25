@@ -10,8 +10,7 @@ constructor(props) {
 super(props);
 this.state = {connected: false, error: undefined};
 this.handleLogin = this.handleLogin.bind(this);
-this.client = new tmi.client();
-this.client.opts.connection.secure = true;
+this.client = new tmi.client({connection: {secure: true}});
 this.speaker = new Speaker();
 }
 
