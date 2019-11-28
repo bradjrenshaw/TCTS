@@ -5,7 +5,7 @@ constructor(props) {
 super(props);
 this.client = props.client;
 this.speaker = props.speaker;
-this.state = {chatText: undefined, currentChannel: this.client.opts.channels[0]};
+this.state = {chatText: '', currentChannel: this.client.opts.channels[0]};
 this.handleChannelChange = this.handleChannelChange.bind(this);
 this.handleChatTextChange = this.handleChatTextChange.bind(this);
 this.handleSubmit = this.handleSubmit.bind(this);
@@ -41,10 +41,11 @@ return (
 Send to channel<input type="text" onChange={this.handleChannelChange} value={this.state.currentChannel}/></label><br/>
 <label>
 text<input type="text" onChange={this.handleChatTextChange} value={this.state.chatText}/></label>
-<input type="Submit" value="Send"/>
+<input type="Submit" text="Send" />
 </form>
 </div>
 );
 }
 }
+
 export default ChatPanel;

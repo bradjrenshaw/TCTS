@@ -22,32 +22,34 @@ this.speaker.speak('This is a test of your tts settings.');
 }
 
 handleVoiceChange(event) {
-let voice = this.speaker.voices[event.target.selectedIndex];
-this.setState({voice: voice});
-this.speaker.set(this.state);
+	let s = {voice: this.speaker.voices[event.target.selectedIndex]};
+this.setState(s);
+this.speaker.set(s);
 }
 
 handleVolumeChange(event) {
-this.setState({volume: event.target.valueAsNumber});
-this.speaker.set(this.state);
+let s = {volume: event.target.valueAsNumber};
+this.setState(s);
+this.speaker.set(s);
 }
 
 handlePitchChange(event) {
-this.setState({pitch: event.target.valueAsNumber});
-this.speaker.set(this.state);
+let s = {pitch: event.target.valueAsNumber};
+this.setState(s);
+this.speaker.set(s);
 }
 
 handleRateChange(event) {
-this.setState({rate: event.target.valueAsNumber});
-this.speaker.set(this.state);
+let s = {rate: event.target.valueAsNumber};
+this.setState(s);
+this.speaker.set(s);
 }
 
 render() {
-let VoiceBox = () => (<select onChange={this.handleVoiceChange}>{this.speaker.voices.map((s) => <option key={s.name}>{s.name}</option>)}</select>);
 return (
 <div>
 <button onClick={this.handleVoiceStop}>Stop Speech</button><br/>
-<VoiceBox /><br/>
+<select onChange={this.handleVoiceChange} value={this.state.voice.name}>{this.speaker.voices.map((s) => <option key={s.name}>{s.name}</option>)}</select><br/>
 <label>Volume<input type="range" min="0" max="1" step="0.05" onChange={this.handleVolumeChange} value={this.state.volume} /></label><br/>
 <label>Rate<input type="range" min="0" max="10" step="0.1" onChange={this.handleRateChange} value={this.state.rate}/></label><br/>
 <label>Pitch<input type="range" min="0" max="2" step="0.1" onChange={this.handlePitchChange} value={this.state.pitch} /></label><br/>
