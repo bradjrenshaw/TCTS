@@ -38,7 +38,7 @@ this.storage = newStorage;
 if (this.storage) {
 	let result = this.storage.getItem(this.key);
 console.log('getItem result: ' + (typeof result)+'value: '+result);
-	if (result !== 'null') {
+	if (result !== 'null' && result) {
 console.log("Now setting " + result);
 	this.set(JSON.parse(result));
 return true;
