@@ -11,6 +11,7 @@ getVoices() {
     let voices = speechSynthesis.getVoices()
     if (voices.length) {
       resolve(voices)
+this.voices = voices;
       return
     }
     speechSynthesis.onvoiceschanged = () => {
@@ -19,6 +20,10 @@ this.voices = voices;
       resolve(voices);
     }
   })
+}
+
+getVoiceByName(name) {
+return this.voices.find((s) => s.name === name);
 }
 
 speak(text) {
@@ -36,7 +41,14 @@ speechSynthesis.cancel();
 }
 
 set(options) {
-if (options.voice) this.settings.voice = options.voice;
+if (options.voice) {
+if (typeof options.voice == 'string') {
+this.settings.voice = this.getVoiceByName(options.voice);
+console.log(this.settings.voice);
+} else {
+this.settings.voice = options.voice;
+}
+}
 if (options.lang) this.settings.lang = options.lang;
 if (options.rate) this.settings.rate = options.rate;
 if (options.pitch) this.settings.pitch = options.pitch;

@@ -3,10 +3,12 @@ import React from 'react';
 class LoginForm extends React.Component {
 constructor(props) {
 super(props);
-this.state = {username: '', password: '', channels:[]};
+this.config = props.config;
+this.state = {username: this.config.get('user').name, password: this.config.get('user').password, channels:this.config.get('channels'), storeSettings: false};
 this.handleUsernameChange = this.handleUsernameChange.bind(this);
 this.handlePasswordChange = this.handlePasswordChange.bind(this);
 this.handleChannelsChange = this.handleChannelsChange.bind(this);
+this.handleStoreChange = this.handleStoreChange.bind(this);
 this.handleSubmit = this.handleSubmit.bind(this);
 }
 
@@ -21,6 +23,10 @@ this.setState({password: event.target.value});
 handleChannelsChange(event) {
 let channels = event.target.value.split(',').map((s) => s.trim());
 this.setState({channels: channels});
+}
+
+handleStoreChange(event) {
+this.setState({storeSettings: event.target.value});
 }
 
 handleSubmit(event) {
@@ -42,6 +48,8 @@ OAuth password<input type="password" value={this.state.password} onChange={this.
 <br/>
 <label>
 Channels (comma-separated)<input type="text" onChange={this.handleChannelsChange}/></label><br/>
+<label>
+Remember Settings (stores settings locally) <input type="checkbox" value={this.state.storeSettings} onChange={this.handleStoreChange} /></label><br/>
 <input type="submit" value="login"/>
 </form><br/>
 {this.props.error}

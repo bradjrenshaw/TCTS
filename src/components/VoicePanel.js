@@ -1,9 +1,13 @@
 import React from 'react';
+import merge from 'lodash.merge';
+
 
 class VoicePanel extends React.Component {
 constructor(props) {
 super(props);
 this.speaker = props.speaker;
+this.config = props.config;
+this.speaker.set(this.config.get('voiceSettings'));
 this.state = {voice: this.speaker.settings.voice, volume: this.speaker.settings.volume, rate: this.speaker.settings.rate, pitch: this.speaker.settings.pitch};
 this.handleVoiceChange = this.handleVoiceChange.bind(this);
 this.handleVolumeChange = this.handleVolumeChange.bind(this);
@@ -22,27 +26,32 @@ this.speaker.speak('This is a test of your tts settings.');
 }
 
 handleVoiceChange(event) {
-	let s = {voice: this.speaker.voices[event.target.selectedIndex]};
+	let voice = this.speaker.voices[event.target.selectedIndex];
+let s = {voice: voice};
 this.setState(s);
 this.speaker.set(s);
+this.config.update({voiceSettings: {voice: voice.name}});
 }
 
 handleVolumeChange(event) {
 let s = {volume: event.target.valueAsNumber};
 this.setState(s);
 this.speaker.set(s);
+this.config.update({voiceSettings: {volume: event.target.valueAsNumber}});
 }
 
 handlePitchChange(event) {
 let s = {pitch: event.target.valueAsNumber};
 this.setState(s);
 this.speaker.set(s);
+this.config.update({voiceSettings: {pitch: event.target.valueAsNumber}});
 }
 
 handleRateChange(event) {
 let s = {rate: event.target.valueAsNumber};
 this.setState(s);
 this.speaker.set(s);
+this.config.update({voiceSettings: {rate: event.target.valueAsNumber}});
 }
 
 render() {

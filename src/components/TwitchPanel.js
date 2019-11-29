@@ -7,6 +7,7 @@ constructor(props) {
 super(props);
 this.client = this.props.client;
 this.speaker = this.props.speaker;
+this.config = this.props.config;
 this.handleMessage = this.handleMessage.bind(this);
 this.setup();
 }
@@ -15,7 +16,7 @@ render() {
 return (
 <div>
 <h1>Connected</h1>
-<VoicePanel speaker={this.speaker}/>
+<VoicePanel speaker={this.speaker} config={this.config}/>
 <br/><ChatPanel client={this.client} speaker={this.speaker}/></div>
 );
 }

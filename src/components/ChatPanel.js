@@ -26,7 +26,6 @@ this.speaker.speak("Invalid channel.");
 } else {
 let text = this.state.chatText;
 if (text !== '') {
-console.log(this.state);
 this.client.say(this.state.currentChannel, text);
 }
 }
@@ -41,7 +40,7 @@ return (
 Send to channel<input type="text" onChange={this.handleChannelChange} value={this.state.currentChannel}/></label><br/>
 <label>
 text<input type="text" onChange={this.handleChatTextChange} value={this.state.chatText}/></label>
-<input type="Submit" text="Send" />
+<input type="Submit" />
 </form>
 </div>
 );
