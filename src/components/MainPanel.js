@@ -12,6 +12,7 @@ super(props);
 this.state = {connected: false, error: undefined};
 this.storeSettings = false;
 this.handleLogin = this.handleLogin.bind(this);
+this.handleDisconnect = this.handleDisconnect.bind(this);
 this.client = new tmi.client({connection: {secure: true}});
 this.speaker = new Speaker();
 this.config = new Config({user: {username: '', password: ''}, channels: [], currentChannel: null, voiceSettings: {}, storeSettings: false});
@@ -23,17 +24,24 @@ this.config.load(storage);
 }
 let user = this.config.get('user');
 let channels = this.config.get('channels');
-if (user.name !== '' && user.password !== '' && channels.length > 0) {
-this.handleLogin({username: user.name, password: user.password, channels: channels});
+if (user.username !== '' && user.password !== '' && channels.length > 0) {
+this.handleLogin({username: user.username, password: user.password, channels: channels});
 }
 }
+
+handleDisconnect(event) {
+event.preventDefault();
+this.setState({connected: false});
+this.client.disconnect();
+}
+
 
 render() {
 let PrimaryPanel = null;
 if (this.state.connected === false) {
 PrimaryPanel = () => (<LoginForm completionFunction={this.handleLogin} error={this.state.error} config={this.config}/>);
 } else {
-PrimaryPanel = () => (<TwitchPanel client={this.client} speaker = {this.speaker} config={this.config}/>);
+PrimaryPanel = () => (<TwitchPanel client={this.client} speaker = {this.speaker} config={this.config} disconnectFunction={this.handleDisconnect}/>);
 }
 
 return (

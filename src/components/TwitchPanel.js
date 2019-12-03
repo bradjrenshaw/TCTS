@@ -16,6 +16,7 @@ render() {
 return (
 <div>
 <h1>Connected</h1>
+<button value="disconnect" onClick={this.props.disconnectFunction} >Disconnect</button><br />
 <VoicePanel speaker={this.speaker} config={this.config}/>
 <br/><ChatPanel client={this.client} speaker={this.speaker}/></div>
 );

@@ -4,7 +4,7 @@ class LoginForm extends React.Component {
 constructor(props) {
 super(props);
 this.config = props.config;
-this.state = {username: this.config.get('user').name, password: this.config.get('user').password, channels:this.config.get('channels'), storeSettings: false};
+this.state = {username: this.config.get('user').username, password: this.config.get('user').password, channels:this.config.get('channels'), storeSettings: this.config.get('storeSettings')};
 this.handleUsernameChange = this.handleUsernameChange.bind(this);
 this.handlePasswordChange = this.handlePasswordChange.bind(this);
 this.handleChannelsChange = this.handleChannelsChange.bind(this);
@@ -49,7 +49,7 @@ OAuth password<input type="password" value={this.state.password} onChange={this.
 <label>
 Channels (comma-separated)<input type="text" onChange={this.handleChannelsChange}/></label><br/>
 <label>
-Remember Settings (stores settings locally) <input type="checkbox" value={this.state.storeSettings} onChange={this.handleStoreChange} /></label><br/>
+Remember Settings (stores settings locally) <input type="checkbox" value={this.config.get('storeSettings')} onChange={this.handleStoreChange} /></label><br/>
 <input type="submit" value="login"/>
 </form><br/>
 {this.props.error}
