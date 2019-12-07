@@ -49,7 +49,7 @@ OAuth password<input type="password" value={this.state.password} onChange={this.
 <label>
 Channels (comma-separated)<input type="text" onChange={this.handleChannelsChange}/></label><br/>
 <label>
-Remember Settings (stores settings locally) <input type="checkbox" value={this.config.get('storeSettings')} onChange={this.handleStoreChange} /></label><br/>
+Remember Settings (stores settings locally) <input type="checkbox" value={this.state.storeSettings} onChange={this.handleStoreChange} /></label><br/>
 <input type="submit" value="login"/>
 </form><br/>
 {this.props.error}

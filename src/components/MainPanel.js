@@ -35,7 +35,6 @@ this.setState({connected: false});
 this.client.disconnect();
 }
 
-
 render() {
 let PrimaryPanel = null;
 if (this.state.connected === false) {
