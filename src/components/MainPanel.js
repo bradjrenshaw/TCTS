@@ -3,13 +3,14 @@ import tmi from 'tmi.js';
 import LoginForm from './LoginForm';
 import Instructions from './Instructions';
 import TwitchPanel from './TwitchPanel';
+import Transition from './Transition';
 import Speaker from '../Speaker';
 import Config from '../Config';
 
 class MainPanel extends React.Component {
 constructor(props) {
 super(props);
-this.state = {connected: false, error: undefined};
+this.state = {connected: false, error: undefined, connecting: false};
 this.storeSettings = false;
 this.handleLogin = this.handleLogin.bind(this);
 this.handleDisconnect = this.handleDisconnect.bind(this);
@@ -25,6 +26,7 @@ this.config.load(storage);
 let user = this.config.get('user');
 let channels = this.config.get('channels');
 if (user.username !== '' && user.password !== '' && channels.length > 0) {
+this.state.connecting = true;
 this.handleLogin({username: user.username, password: user.password, channels: channels});
 }
 }
@@ -37,7 +39,9 @@ this.client.disconnect();
 
 render() {
 let PrimaryPanel = null;
-if (this.state.connected === false) {
+if (this.state.connecting) {
+PrimaryPanel = () => (<Transition header="Connecting" message="Connecting to Twitch."/>);
+} else if (this.state.connected === false) {
 PrimaryPanel = () => (<LoginForm completionFunction={this.handleLogin} error={this.state.error} config={this.config}/>);
 } else {
 PrimaryPanel = () => (<TwitchPanel client={this.client} speaker = {this.speaker} config={this.config} disconnectFunction={this.handleDisconnect}/>);
@@ -49,6 +53,7 @@ return (
 
 async handleLogin(props) {
 this.setAuth(props.username, props.password);
+this.config.shouldSave = props.storeSettings;
 this.config.update({storeSettings: props.storeSettings});
 this.client.opts.channels = props.channels;
 await this.connect();
@@ -70,6 +75,7 @@ this.config.update({user: this.client.opts.identity, channels: this.client.opts.
 } catch(e) {
 this.setState({error: e, connected: false});
 }
+this.setState({connecting: false});
 }
 };
 

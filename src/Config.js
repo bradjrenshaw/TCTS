@@ -1,15 +1,16 @@
 import cloneDeep from 'lodash.clonedeep';
-import merge from 'lodash.merge';
+import mergeWith from 'lodash.mergewith';
 
 
 //A class to store config in local or session storage, or in memory if neither are available
 
 class Config {
-constructor(defaultConfig, key, storage) {
+constructor(defaultConfig, key, storage, shouldSave=false) {
 this.defaultConfig = defaultConfig;
 this.config = {};
 this.key = key;
 this.storage = storage;
+this.shouldSave = shouldSave;
 this.set(defaultConfig);
 }
 
@@ -17,18 +18,18 @@ get(value) {
 	return this.config[value];
 }
 
-
 set(s) {
 	let result = cloneDeep(s);
 	this.config = result;
-this.save();
-console.log(this.config);
+if (this.shouldSave) this.save();
 }
 
 update(s) {
 	let result = cloneDeep(s);
-	merge(this.config, result);
-this.save();
+	mergeWith(this.config, result, (a, b) => {
+		if(Array.isArray(a) && Array.isArray(b)) return b;
+	});
+if (this.shouldSave) this.save();
 }
 
 load(newStorage = undefined) {
@@ -37,7 +38,6 @@ this.storage = newStorage;
 }
 if (this.storage) {
 	let result = this.storage.getItem(this.key);
-console.log('getItem result: ' + (typeof result)+'value: '+result);
 	if (result !== 'null' && result) {
 console.log("Now setting " + result);
 	this.set(JSON.parse(result));
@@ -59,6 +59,22 @@ save(newStorage = undefined) {
 	return false;
 }
 
+clear() {
+	if (this.storage) {
+		this.storage.removeItem(this.key);
+	}
+}
+
+get shouldSave() {
+return this._saves;
+}
+
+set shouldSave(value) {
+this._saves = value;
+if (value === false) {
+this.clear();
+}
+}
 
 }
 
