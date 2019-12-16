@@ -5,7 +5,6 @@ class Speaker {
         this.setup();
     }
 
-
     getVoices() {
         return new Promise(resolve => {
             let voices = speechSynthesis.getVoices();
@@ -44,7 +43,6 @@ class Speaker {
         if (options.voice) {
             if (typeof options.voice == "string") {
                 this.settings.voice = this.getVoiceByName(options.voice);
-                console.log(this.settings.voice);
             } else {
                 this.settings.voice = options.voice;
             }

@@ -8,9 +8,11 @@ class TwitchPanel extends React.Component {
         this.client = this.props.client;
         this.speaker = this.props.speaker;
         this.config = this.props.config;
-        this.handleMessage = this.handleMessage.bind(this);
-        this.handleCheer = this.handleCheer.bind(this);
-        this.handleNotice = this.handleNotice.bind(this);
+        this.events = {};
+        this.triggers = {};
+this.addEvent('message', this.handleMessage);
+this.addEvent('cheer', this.handleCheer);
+console.log('constructor');
         this.setup();
     }
 
@@ -25,30 +27,42 @@ class TwitchPanel extends React.Component {
     }
 
     setup() {
-        this.client.on("message", this.handleMessage);
-        this.client.on("cheer", this.handleCheer);
-        this.client.on("notice", this.handleNotice);
+this.client.removeAllListeners();
+for (const [name, callbacks] of Object.entries(this.events)) {
+for (let callback of callbacks) {
+let newCallback = callback.bind(this);
+this.client.on(name, newCallback);
+}
+}
     }
 
     componentWillUnmount() {
-        this.client.removeListener("message", this.handleMessage);
-        this.client.removeListener("cheer", this.handleCheer);
-        this.client.removeListener("notice", this.handleNotice);
+this.client.removeAllListeners();
     }
 
-
     handleMessage(target, context, msg, self) {
-        this.speaker.speak(context["display-name"] + ": " + msg);
+        let message = context["display-name"] + ": " + msg;
+let event = {target: target, context: context, raw_message: msg, message: message, self: self};
+this.pushEvent(event);
     }
 
     handleCheer(target, context, msg) {
-        this.speaker.speak(context["display-name"] + ": " + msg);
+        let message = context["display-name"] + ": " + msg;
+        let event = {target: target, context: context, raw_message: msg, message: message};
+this.pushEvent(event);
     }
 
-    handleNotice(channel, msgid, msg) {
-        this.speaker.speak("notice: " + msgid + ": " + msg);
+    addEvent(name, callback) {
+        if (name in this.events) {
+this.events[name].push(callback);
+    } else {
+this.events[name] = [callback];
+}
     }
 
+pushEvent(e) {
+this.speaker.speak(e.message);
+}
 }
 
 export default TwitchPanel;

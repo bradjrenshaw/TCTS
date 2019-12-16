@@ -38,17 +38,15 @@ class MainPanel extends React.Component {
     }
 
     render() {
-        let PrimaryPanel = null;
         if (this.state.connecting) {
-            PrimaryPanel = () => (<Transition header="Connecting" message="Connecting to Twitch."/>);
+            return (<Transition header="Connecting" message="Connecting to Twitch."/>);
         } else if (this.state.connected === false) {
-            PrimaryPanel = () => (<LoginForm completionFunction={this.handleLogin} error={this.state.error} config={this.config}/>);
+            return (<div><LoginForm completionFunction={this.handleLogin} error={this.state.error} config={this.config}/><br/><Instructions/></div>);
         } else {
-            PrimaryPanel = () => (<TwitchPanel client={this.client} speaker = {this.speaker} config={this.config} disconnectFunction={this.handleDisconnect}/>);
+            return (<TwitchPanel client={this.client} speaker = {this.speaker} config={this.config} disconnectFunction={this.handleDisconnect}/>);
         }
 
-        return (
-            <div><PrimaryPanel /><br/><br/><Instructions/></div>);
+
     }
 
     async handleLogin(props) {

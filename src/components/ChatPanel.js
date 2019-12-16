@@ -27,6 +27,7 @@ class ChatPanel extends React.Component {
             let text = this.state.chatText;
             if (text !== "") {
                 this.client.say(this.state.currentChannel, text);
+this.setState({chatText: ""});
             }
         }
     }
