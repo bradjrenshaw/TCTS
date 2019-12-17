@@ -12,7 +12,8 @@ class TwitchPanel extends React.Component {
         this.triggers = {};
 this.addEvent('message', this.handleMessage);
 this.addEvent('cheer', this.handleCheer);
-console.log('constructor');
+this.addEvent('hosted', this.handleHosted);
+this.addEvent('raided', this.handleRaided);
         this.setup();
     }
 
@@ -39,6 +40,28 @@ this.client.on(name, newCallback);
     componentWillUnmount() {
 this.client.removeAllListeners();
     }
+
+handleNotice(channel, msgid, msg) {
+console.log('Notice event: ' + channel + ', ' + msgid + ': ' + msg);
+}
+
+
+handleHosted(channel, name, viewers) {
+let message = '';
+if (viewers > 0) {
+message = name + ' is now hosting you with ' + viewers + ' viewers.';
+} else {
+message = name + ' is now hosting you.';
+}
+let event = {channel: channel, name: name, viewers: viewers, message: message};
+this.pushEvent(event);
+}
+
+handleRaided(channel, name, viewers) {
+let message = name + ' has raided you with ' + viewers + ' viewers.';
+let event = {channel: channel, name: name, viewers: viewers, message: message};
+this.pushEvent(event);
+}
 
     handleMessage(target, context, msg, self) {
         let message = context["display-name"] + ": " + msg;
