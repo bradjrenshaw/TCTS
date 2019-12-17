@@ -14,8 +14,12 @@ class Config {
         this.set(defaultConfig);
     }
 
-    get(value) {
-        return this.config[value];
+    get(value, defaultValue) {
+let result = this.config[value];
+if (!result) {
+return defaultValue;
+}
+return result;
     }
 
     set(s) {

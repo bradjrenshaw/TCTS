@@ -22,6 +22,7 @@ class MainPanel extends React.Component {
         } else {
             let storage = window.localStorage;
             this.config.load(storage);
+
         }
         let user = this.config.get("user");
         let channels = this.config.get("channels");
@@ -29,6 +30,7 @@ class MainPanel extends React.Component {
             this.state.connecting = true;
             this.handleLogin({username: user.username, password: user.password, channels: channels});
         }
+this.config.shouldSave = this.config.get('storeSettings', false);
     }
 
     handleDisconnect(event) {
