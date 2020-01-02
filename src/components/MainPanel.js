@@ -14,7 +14,7 @@ class MainPanel extends React.Component {
         this.storeSettings = false;
         this.handleLogin = this.handleLogin.bind(this);
         this.handleDisconnect = this.handleDisconnect.bind(this);
-        this.client = new tmi.client({connection: {secure: true}});
+        this.client = new tmi.client({connection: {secure: true, reconnect: true}});
         this.speaker = new Speaker();
         this.config = new Config({user: {username: "", password: ""}, channels: [], currentChannel: null, voiceSettings: {}, storeSettings: false});
         if (!window.localStorage) {
