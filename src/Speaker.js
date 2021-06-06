@@ -48,6 +48,10 @@ class Speaker {
         if (options.voice) {
             if (typeof options.voice == "string") {
                 this.settings.voice = this.getVoiceByName(options.voice);
+                if (this.settings.voice === undefined) {
+                    console.error("Error: Voice " + options.voice + " not found; switching to default.");
+                    this.settings.voice = this.voices[0];
+                }
             } else {
                 this.settings.voice = options.voice;
             }
