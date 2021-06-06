@@ -28,25 +28,25 @@ class MainPanel extends React.Component {
             this.setup();
         });
     }
-
+    
     handleDisconnect(event) {
         event.preventDefault();
         this.setState({connected: false});
         this.client.disconnect();
     }
-
+    
     render() {
-        if (this.state.connecting) {
+        if (this.state.loading) {
+            return (<Transition header="Loading" message="Initializing application."/>);
+        } else if (this.state.connecting) {
             return (<Transition header="Connecting" message="Connecting to Twitch."/>);
         } else if (this.state.connected === false) {
             return (<div><LoginForm completionFunction={this.handleLogin} error={this.state.error} config={this.config}/><br/><Instructions/></div>);
         } else {
             return (<TwitchPanel client={this.client} speaker = {this.speaker} config={this.config} disconnectFunction={this.handleDisconnect}/>);
         }
-
-
     }
-
+    
     async handleLogin(props) {
         this.setAuth(props.username, props.password);
         this.config.shouldSave = props.storeSettings;
@@ -54,13 +54,13 @@ class MainPanel extends React.Component {
         this.client.opts.channels = props.channels;
         await this.connect();
     }
-
+    
     setAuth(username, password) {
         let identity = this.client.opts.identity;
         identity.username = username;
         identity.password = password;
     }
-
+    
     async connect() {
         try {
             await this.client.connect();
@@ -73,7 +73,7 @@ class MainPanel extends React.Component {
         }
         this.setState({connecting: false});
     }
-
+    
     async setup() {
         await this.speaker.load();
         this.setState({loading: false});
@@ -83,7 +83,7 @@ class MainPanel extends React.Component {
             this.state.connecting = true;
             this.handleLogin({username: user.username, password: user.password, channels: channels});
         }
-this.config.shouldSave = this.config.get('storeSettings', false);
+        this.config.shouldSave = this.config.get('storeSettings', false);
     }
 }
 
