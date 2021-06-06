@@ -10,10 +10,11 @@ import Config from "../Config";
 class MainPanel extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {connected: false, error: undefined, connecting: false};
+        this.state = {connected: false, error: undefined, connecting: false, loading: true};
         this.storeSettings = false;
         this.handleLogin = this.handleLogin.bind(this);
         this.handleDisconnect = this.handleDisconnect.bind(this);
+        this.setup = this.setup.bind(this);
         this.client = new tmi.client({connection: {secure: true, reconnect: true}});
         this.speaker = new Speaker();
         this.config = new Config({user: {username: "", password: ""}, channels: [], currentChannel: null, voiceSettings: {}, storeSettings: false});
@@ -22,15 +23,10 @@ class MainPanel extends React.Component {
         } else {
             let storage = window.localStorage;
             this.config.load(storage);
-
         }
-        let user = this.config.get("user");
-        let channels = this.config.get("channels");
-        if (user.username !== "" && user.password !== "" && channels.length > 0) {
-            this.state.connecting = true;
-            this.handleLogin({username: user.username, password: user.password, channels: channels});
-        }
-this.config.shouldSave = this.config.get('storeSettings', false);
+        window.addEventListener('load', () => {
+            this.setup();
+        });
     }
 
     handleDisconnect(event) {
@@ -76,6 +72,18 @@ this.config.shouldSave = this.config.get('storeSettings', false);
             this.setState({error: e, connected: false});
         }
         this.setState({connecting: false});
+    }
+
+    async setup() {
+        await this.speaker.load();
+        this.setState({loading: false});
+        let user = this.config.get("user");
+        let channels = this.config.get("channels");
+        if (user.username !== "" && user.password !== "" && channels.length > 0) {
+            this.state.connecting = true;
+            this.handleLogin({username: user.username, password: user.password, channels: channels});
+        }
+this.config.shouldSave = this.config.get('storeSettings', false);
     }
 }
 

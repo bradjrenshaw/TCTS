@@ -2,13 +2,15 @@ class Speaker {
 
     constructor() {
         this.settings = {};
-        this.setup();
     }
 
     getVoices() {
+        if (speechSynthesis === undefined) {
+            console.error("Error: speechSynthesis object does not exist.");
+        }
         return new Promise(resolve => {
             let voices = speechSynthesis.getVoices();
-            if (voices.length) {
+            if (voices.length > 0) {
                 resolve(voices);
                 this.voices = voices;
                 return;
@@ -16,6 +18,9 @@ class Speaker {
             speechSynthesis.onvoiceschanged = () => {
                 voices = speechSynthesis.getVoices();
                 this.voices = voices;
+                if (voices.length <= 0) {
+                    console.error("TTS voices not found in voice changed event.");
+                }
                 resolve(voices);
             };
         });
@@ -53,7 +58,7 @@ class Speaker {
         if (options.volume) this.settings.volume = options.volume;
     }
 
-    async setup() {
+    async load() {
         let voices = await this.getVoices();
         this.settings = {
             rate: 1.0,
