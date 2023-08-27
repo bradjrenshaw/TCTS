@@ -2,7 +2,6 @@ import OutputEvent from "../outputServices/outputServiceProvider/OutputEvent";
 import Profile from "../Profile";
 
 export default abstract class OutputAction {
-
     readonly name: string = "";
     event: OutputEvent;
     profile: Profile;
@@ -20,4 +19,4 @@ export default abstract class OutputAction {
     }
 
     abstract execute(): void;
-};
+}

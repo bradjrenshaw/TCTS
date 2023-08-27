@@ -1,4 +1,3 @@
-
 export default class SpeechSettings {
     provider: string;
     voice: string;
@@ -10,10 +9,15 @@ export default class SpeechSettings {
         this.voice = voice;
         this.rate = rate;
         this.volume = volume;
-    }    
+    }
 
     static deserialize(data: any): SpeechSettings {
-        return new SpeechSettings(data.provider, data.voice, data.rate, data.volume);
+        return new SpeechSettings(
+            data.provider,
+            data.voice,
+            data.rate,
+            data.volume,
+        );
     }
 
     serialize(): object {
@@ -21,7 +25,7 @@ export default class SpeechSettings {
             provider: this.provider,
             voice: this.voice,
             rate: this.rate,
-            volume: this.volume
+            volume: this.volume,
         };
     }
-};
+}

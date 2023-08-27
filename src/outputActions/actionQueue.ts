@@ -3,7 +3,6 @@ import DataManager from "../DataManager";
 import OutputAction from "./OutputAction";
 
 export default class ActionQueue {
-
     dataManager: DataManager;
     actions: Array<OutputAction>;
     private processing: boolean;
@@ -54,8 +53,8 @@ export default class ActionQueue {
         }
     }
 
-        run(): void {
-            this.process();
-            setTimeout(this.run, 10);
-        }
-};
+    run(): void {
+        this.process();
+        setTimeout(this.run, 10);
+    }
+}

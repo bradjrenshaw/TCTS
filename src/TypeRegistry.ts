@@ -1,6 +1,5 @@
 export default class ProviderRegistry<T> {
-
-    providers: {[key: string]: T};
+    providers: { [key: string]: T };
     defaultProviderName: string;
     defaultProvider: T | null;
 
@@ -10,16 +9,20 @@ export default class ProviderRegistry<T> {
         this.defaultProvider = null;
     }
 
-    get(name: string): T|undefined {
+    get(name: string): T | undefined {
         return this.providers[name];
     }
 
-    register(name: string, provider: T, isDefaultProvider: boolean = false): void {
+    register(
+        name: string,
+        provider: T,
+        isDefaultProvider: boolean = false,
+    ): void {
         if (this.providers[name]) {
             throw new Error("A provider " + name + " already exists.");
         }
         this.providers[name] = provider;
-        if(!this.defaultProvider || isDefaultProvider) {
+        if (!this.defaultProvider || isDefaultProvider) {
             this.setDefaultProvider(name, provider);
         }
     }
@@ -28,4 +31,4 @@ export default class ProviderRegistry<T> {
         this.defaultProviderName = name;
         this.defaultProvider = provider;
     }
-};
+}

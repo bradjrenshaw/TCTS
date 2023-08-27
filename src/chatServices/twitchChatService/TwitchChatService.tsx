@@ -5,15 +5,19 @@ import TwitchChatServiceConnection from "./TwitchChatServiceConnection";
 import DataManager from "../../DataManager";
 import Profile from "../../Profile";
 
-
 class TwitchChatService extends ChatService {
-    
     public readonly name = "Twitch";
     private username: string;
     private token: string;
     private channel: string;
 
-    constructor(dataManager: DataManager, profile: Profile, username: string = "", token: string = "", channel: string = "") {
+    constructor(
+        dataManager: DataManager,
+        profile: Profile,
+        username: string = "",
+        token: string = "",
+        channel: string = "",
+    ) {
         super(dataManager, profile);
         this.ConnectionComponent = this.ConnectionComponent.bind(this);
         this.username = username;
@@ -23,11 +27,21 @@ class TwitchChatService extends ChatService {
 
     clone(profile: Profile): ChatService {
         let data = this.serialize();
-        return TwitchChatService.prototype.deserialize(this.dataManager, profile, data);
+        return TwitchChatService.prototype.deserialize(
+            this.dataManager,
+            profile,
+            data,
+        );
     }
 
-    async connect(): Promise<ChatServiceConnection >{
-        this.connection = new TwitchChatServiceConnection(this.dataManager, this, this.username, this.token, this.channel);
+    async connect(): Promise<ChatServiceConnection> {
+        this.connection = new TwitchChatServiceConnection(
+            this.dataManager,
+            this,
+            this.username,
+            this.token,
+            this.channel,
+        );
         await this.connection.connect();
         return this.connection;
     }
@@ -46,55 +60,95 @@ class TwitchChatService extends ChatService {
             errors.push("A username for the Twitch chat service is required.");
         }
         if (!this.token || this.token === "") {
-            errors.push("An auth token for the Twitch chat service is required.");
+            errors.push(
+                "An auth token for the Twitch chat service is required.",
+            );
         }
         if (this.token.length > 0 && !this.token.startsWith("oauth:")) {
             errors.push("Twitch auth token must include the oauth: prefix.");
         }
-                if (!this.channel || this.channel === "") {
+        if (!this.channel || this.channel === "") {
             errors.push("A channel for the Twitch chat service is required.");
         }
         if (this.channel.startsWith("#")) {
-            errors.push("The chat channel used for the Twitch chat service should not start with #.");
+            errors.push(
+                "The chat channel used for the Twitch chat service should not start with #.",
+            );
         }
         return errors;
     }
 
     ConnectionComponent(): any {
         let [username, setUsername] = useState(this.username);
-        let [ authToken, setAuthToken ] = useState(this.token);
-        let [ channel, setChannel ] = useState(this.channel);
+        let [authToken, setAuthToken] = useState(this.token);
+        let [channel, setChannel] = useState(this.channel);
 
-        const handleUsernameChanged = (event: ChangeEvent<HTMLInputElement>) => {
-                this.username = event.target.value;
-                setUsername(this.username);
+        const handleUsernameChanged = (
+            event: ChangeEvent<HTMLInputElement>,
+        ) => {
+            this.username = event.target.value;
+            setUsername(this.username);
         };
 
-        const handleAuthTokenChanged = (event: ChangeEvent<HTMLInputElement>) => {
-                this.token = event.target.value;
-                setAuthToken(this.token);
+        const handleAuthTokenChanged = (
+            event: ChangeEvent<HTMLInputElement>,
+        ) => {
+            this.token = event.target.value;
+            setAuthToken(this.token);
         };
 
         const handleChannelChanged = (event: ChangeEvent<HTMLInputElement>) => {
-                this.channel = event.target.value;
-                setChannel(this.channel);
+            this.channel = event.target.value;
+            setChannel(this.channel);
         };
 
-        return <>
-        <form>
-            <label htmlFor="inputUsername">Username: </label>
-                <input id="inputUsername" value={username} onChange={handleUsernameChanged} /><br />
-            <label htmlFor="inputToken">Auth Token/Password (including the auth: prefix): </label>
-                <input id="inputToken" value={authToken} onChange={handleAuthTokenChanged} />
-            <label htmlFor="inputChannel">Channel: </label>
-                <input id="inputChannel" value={channel} onChange={handleChannelChanged} /><br/>
-            <p>An oauth token is required to connect tcts to Twitch. Use <a href="https://twitchapps.com/tmi/">this page</a> to generate one.</p>
-        </form>
-        </>
+        return (
+            <>
+                <form>
+                    <label htmlFor="inputUsername">Username: </label>
+                    <input
+                        id="inputUsername"
+                        value={username}
+                        onChange={handleUsernameChanged}
+                    />
+                    <br />
+                    <label htmlFor="inputToken">
+                        Auth Token/Password (including the auth: prefix):{" "}
+                    </label>
+                    <input
+                        id="inputToken"
+                        value={authToken}
+                        onChange={handleAuthTokenChanged}
+                    />
+                    <label htmlFor="inputChannel">Channel: </label>
+                    <input
+                        id="inputChannel"
+                        value={channel}
+                        onChange={handleChannelChanged}
+                    />
+                    <br />
+                    <p>
+                        An oauth token is required to connect tcts to Twitch.
+                        Use <a href="https://twitchapps.com/tmi/">this page</a>{" "}
+                        to generate one.
+                    </p>
+                </form>
+            </>
+        );
     }
 
-    deserialize(dataManager: DataManager, profile: Profile, data: any): ChatService {
-        return new TwitchChatService(dataManager, profile, data.username, data.token, data.channel);
+    deserialize(
+        dataManager: DataManager,
+        profile: Profile,
+        data: any,
+    ): ChatService {
+        return new TwitchChatService(
+            dataManager,
+            profile,
+            data.username,
+            data.token,
+            data.channel,
+        );
     }
 
     serialize(): object {
@@ -102,7 +156,7 @@ class TwitchChatService extends ChatService {
             name: this.name,
             username: this.username,
             token: this.token,
-            channel: this.channel
+            channel: this.channel,
         };
     }
 }

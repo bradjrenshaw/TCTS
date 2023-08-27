@@ -4,15 +4,15 @@ import Profile from "../../Profile";
 
 export default abstract class ChatService {
     public readonly name: string = "Undefined";
-    protected connection: ChatServiceConnection| null;
+    protected connection: ChatServiceConnection | null;
     profile: Profile;
     readonly dataManager: DataManager;
 
-constructor(dataManager: DataManager, profile: Profile) {
-    this.dataManager = dataManager;
-    this.profile = profile;
-    this.connection = null;
-}
+    constructor(dataManager: DataManager, profile: Profile) {
+        this.dataManager = dataManager;
+        this.profile = profile;
+        this.connection = null;
+    }
 
     abstract clone(profile: Profile): ChatService;
 
@@ -36,7 +36,11 @@ constructor(dataManager: DataManager, profile: Profile) {
 
     abstract ConnectionComponent(): any;
 
-    abstract deserialize(dataManager: DataManager, profile: Profile, data: any): ChatService;
+    abstract deserialize(
+        dataManager: DataManager,
+        profile: Profile,
+        data: any,
+    ): ChatService;
 
     abstract serialize(): object;
 }

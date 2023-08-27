@@ -2,16 +2,13 @@ import Profile from "../../Profile";
 import ChatEvent from "../../events/ChatEvent";
 import OutputAction from "../../outputActions/OutputAction";
 
-
 export default class OutputEvent {
-
     profile: Profile;
     chatEvent: ChatEvent;
     message: any;
-    variables: {[key: string]: any};
+    variables: { [key: string]: any };
     actions: Array<OutputAction>;
     preventDefaultBehavior: boolean;
-
 
     constructor(profile: Profile, chatEvent: ChatEvent, message: any) {
         this.profile = profile;
@@ -28,6 +25,7 @@ export default class OutputEvent {
 
     process(): void {
         //Will iterate through triggers when they are added
-        if (!this.preventDefaultBehavior) this.actions.push(...this.chatEvent.getDefaultActions(this));
+        if (!this.preventDefaultBehavior)
+            this.actions.push(...this.chatEvent.getDefaultActions(this));
     }
-};
+}

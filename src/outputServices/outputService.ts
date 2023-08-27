@@ -2,14 +2,16 @@ import DataManager from "../DataManager";
 import OutputMessageAction from "../outputActions/OutputMessageAction";
 import OutputServiceProvider from "./outputServiceProvider/outputServiceProvider";
 
-
 export default class OutputService {
-
     name: string;
     dataManager: DataManager;
     serviceProvider: OutputServiceProvider | null;
 
-    constructor(dataManager: DataManager, name: string = "", serviceProvider: OutputServiceProvider|null = null) {
+    constructor(
+        dataManager: DataManager,
+        name: string = "",
+        serviceProvider: OutputServiceProvider | null = null,
+    ) {
         this.dataManager = dataManager;
         this.name = name;
         this.serviceProvider = serviceProvider;
@@ -39,17 +41,28 @@ export default class OutputService {
         if (!data.serviceProvider) {
             throw new Error("OutputService missing serviceProvider field.");
         }
-        let serviceProviderType: typeof OutputServiceProvider = dataManager.providerRegistry.outputServiceProviders[data.serviceProvider.name];
+        let serviceProviderType: typeof OutputServiceProvider =
+            dataManager.providerRegistry.outputServiceProviders[
+                data.serviceProvider.name
+            ];
         if (!serviceProviderType) {
-            throw new Error("Service provider with name " + data.serviceProvider.name + " not found.");
+            throw new Error(
+                "Service provider with name " +
+                    data.serviceProvider.name +
+                    " not found.",
+            );
         }
-        return new OutputService(dataManager, data.name, serviceProviderType.prototype.deserialize(data.serviceProvider));
+        return new OutputService(
+            dataManager,
+            data.name,
+            serviceProviderType.prototype.deserialize(data.serviceProvider),
+        );
     }
 
     serialize(): any {
         return {
             name: this.name,
-            serviceProvider: this.serviceProvider?.serialize()
+            serviceProvider: this.serviceProvider?.serialize(),
         };
     }
-    };
+}
