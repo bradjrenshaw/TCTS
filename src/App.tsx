@@ -65,7 +65,7 @@ const App = () => {
         return (
             <DataContext.Provider value={data}>
                 <ProviderRegistryContext.Provider value={providerRegistry}>
-                    <AppContainer data={data} />
+                    <AppContainer />
                 </ProviderRegistryContext.Provider>
             </DataContext.Provider>
         );

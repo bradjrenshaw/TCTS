@@ -8,16 +8,16 @@ import Profile from "../Profile";
 import TabManagerContext from "../contexts/TabManagerContext";
 import UniqueItemList from "../UniqueItemList";
 
-const AppContainer = (props: any) => {
+const AppContainer = () => {
     let [profileTabs, setProfileTabs] = useState<Array<Profile>>([]);
-    /* eslint-disable @typescript-eslint/no-unused-vars */
+
     let [tabManager, setTabManager] = useState<UniqueItemList<Profile>>(
         new UniqueItemList(profileTabs, false, (profiles: Array<Profile>) => {
             setProfileTabs(profiles);
         }),
     );
 
-    return (
+    return <>
         <TabManagerContext.Provider value={tabManager}>
             <Tabs>
                 <TabList>
@@ -40,7 +40,7 @@ const AppContainer = (props: any) => {
                 ))}
             </Tabs>
         </TabManagerContext.Provider>
-    );
+    </>
 };
 
 export default AppContainer;

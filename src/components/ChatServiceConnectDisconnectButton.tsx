@@ -5,7 +5,7 @@ import ChatService from "../chatServices/chatService/ChatService";
 const ChatServiceConnectDisconnectButton = ({
     service,
 }: {
-    service: ChatService | null;
+    service: ChatService;
 }) => {
     let tabManager = useContext(TabManagerContext);
     let [connected, setConnected] = useState(
