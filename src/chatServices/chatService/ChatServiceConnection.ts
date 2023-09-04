@@ -29,8 +29,13 @@ export default abstract class ChatServiceConnection {
 
     abstract processChatEvent(event: ChatEvent, message: any): void;
 
+    abstract sendMessage(message: string): void;
+
     processOutputEvent(event: OutputEvent): void {
         event.process();
+
+        //Will be refactored later
+        this.profile.addOutput(event.variables.text);
         this.dataManager.actionQueue.enqueueEvent(event);
     }
 }

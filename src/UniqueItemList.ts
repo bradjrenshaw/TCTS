@@ -45,7 +45,7 @@ export default class UniqueItemList<T> extends EventTarget {
 
     push(item: T): void {
         for (let i of this.items) {
-            if ((this.comparisonFunc && this.comparisonFunc(item, i)) || i === item) {
+            if ((this.comparisonFunc && this.comparisonFunc(item, i)) || (!this.comparisonFunc && i === item)) {
                 if (this.strict)
                     throw new Error(
                         "item " +

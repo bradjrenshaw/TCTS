@@ -27,6 +27,10 @@ export default class OutputMessageAction extends OutputAction {
     }
 
     execute() {
-        this.outputService.output(this);
+        if (this.event.variables.text) {
+            this.outputService.output(this);
+        } else {
+            this.complete();
+        }
     }
-}
+};

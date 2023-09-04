@@ -36,6 +36,11 @@ export default abstract class ChatService {
 
     abstract ConnectionComponent(): any;
 
+    async sendMessage(message: string): Promise<void> {
+        if (!this.isConnected()) return;
+        await this.connection?.sendMessage(message);
+    }
+
     abstract deserialize(
         dataManager: DataManager,
         profile: Profile,

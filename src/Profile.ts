@@ -1,6 +1,8 @@
 import ChatService from "./chatServices/chatService/ChatService";
 import OutputService from "./outputServices/outputService";
 import DataManager from "./DataManager";
+import UniqueItemList from "./UniqueItemList";
+
 
 export default class Profile {
     name: string;
@@ -8,6 +10,7 @@ export default class Profile {
     chatService: ChatService | null;
     outputService: OutputService | null;
     readonly dataManager: DataManager;
+    outputHistory: UniqueItemList<string>;
 
     constructor(
         dataManager: DataManager,
@@ -21,6 +24,9 @@ export default class Profile {
         this.outputSettings = outputSettings ? outputSettings : {};
         this.chatService = chatService;
         this.outputService = outputService;
+
+        //We will need a new ItemList class later
+        this.outputHistory = new UniqueItemList<string>([], false, (a: string, b: string) => false);
     }
 
     clone(): Profile {
@@ -33,6 +39,8 @@ export default class Profile {
             profile.chatService = this.chatService.clone(profile);
         if (this.outputService)
             profile.outputService = this.outputService.clone();
+        let history = [...this.outputHistory];
+        profile.outputHistory = new UniqueItemList<string>(history, false, (a: string, b: string) => false);
         return profile;
     }
 
@@ -45,6 +53,10 @@ export default class Profile {
             outputSettings: this.outputSettings,
             chatService: this.chatService ? this.chatService?.serialize() : {},
         };
+    }
+
+    addOutput(message: string): void {
+        this.outputHistory.push(message);
     }
 
     getUIErrors(): Array<string> {

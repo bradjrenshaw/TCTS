@@ -51,6 +51,7 @@ const ProfileList = ({
     profiles: Array<Profile>;
     onAction: any;
 }) => {
+    let dataManager: DataManager = useDataContext();
     let onAddClick = () => {
         let profile: Profile = new Profile(dataManager);
         onAction(Action.Add, profile);

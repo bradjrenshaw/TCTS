@@ -4,6 +4,8 @@ import Modal from "./Modal";
 import ProfileSettings from "./ProfileSettings";
 import DataManager from "../DataManager";
 import { useDataContext } from "../contexts/DataContext";
+import OutputHistory from "./OutputHistory";
+import ChatInput from "./ChatInput";
 
 enum Action {
     View,
@@ -44,7 +46,9 @@ const ProfileView = ({ profile}: { profile: Profile}) => {
     return (
         <>
             <h1>{profile.name}</h1>
-            <button onClick={handleSettingsClick}>Settings</button>
+            <button onClick={handleSettingsClick}>Settings</button><br /><br />
+            <OutputHistory profile={profile} />
+            {profile.chatService && <ChatInput profile={profile} />}
         </>
     );
     } else if (action === Action.Settings) {

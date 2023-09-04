@@ -54,6 +54,25 @@ export default class TwitchChatServiceConnection extends ChatServiceConnection {
         this.processOutputEvent(new OutputEvent(this.profile, event, message));
     }
 
+    async sendMessage(message: string): Promise<void> {
+        await this.chat.broadcast(message);
+
+        //An incredibly hacky workaround for an issue with tmi.js, should be changed later
+        let chatEvent = new ChatEvent(
+            null,
+            "all",
+            (event: OutputEvent) => [
+                new OutputMessageAction(this.profile, event),
+            ],
+            (message: any) => {
+                return {
+                    text: this.username + ": " + message
+                };
+            },
+        );
+        this.processChatEvent(chatEvent, message);
+    }
+
     receivedEvent(message: any): void {
         let chatEvent = new ChatEvent(
             null,
@@ -63,7 +82,7 @@ export default class TwitchChatServiceConnection extends ChatServiceConnection {
             ],
             (message: any) => {
                 return {
-                    text: message.tags.displayName
+                    text: message.tags.displayName && message.message
                         ? message.tags.displayName + ": " + message.message
                         : undefined,
                 };
