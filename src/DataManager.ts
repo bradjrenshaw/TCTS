@@ -3,7 +3,9 @@ import ChatService from "./chatServices/chatService/ChatService";
 import OutputService from "./outputServices/outputService";
 import Profile from "./Profile";
 import ProviderRegistry from "./ProviderRegistry";
+import UniqueItemListEvent from "./events/UniqueItemListEvent";
 import UniqueItemList from "./UniqueItemList";
+
 
 export default class DataManager {
     outputServices: UniqueItemList<OutputService>;
@@ -16,6 +18,10 @@ export default class DataManager {
         this.outputServices = new UniqueItemList<OutputService>();
         this.profiles = new UniqueItemList<Profile>();
         this.actionQueue = new ActionQueue(this);
+        this.handleOutputServicesRemove = this.handleOutputServicesRemove.bind(this);
+        this.handleOutputServicesReplace = this.handleOutputServicesReplace.bind(this);
+        this.outputServices.addEventListener("remove", this.handleOutputServicesRemove as EventListener);
+        this.outputServices.addEventListener("replace", this.handleOutputServicesReplace as EventListener);
     }
 
     addProfile(profile: Profile): void {
@@ -94,6 +100,24 @@ export default class DataManager {
     ): boolean {
         return this.outputServices.replace(original, replacement);
     }
+
+    private handleOutputServicesRemove(event: UniqueItemListEvent<OutputService>): void {
+        let item = event.items[0];
+        for (let p of this.profiles) {
+            if (p.outputService === item) {
+                p.setOutputService(null);
+            }
+        }
+    }
+
+    private handleOutputServicesReplace(event: UniqueItemListEvent<OutputService>): void {
+        const [ oldItem, newItem ] = event.items;
+        for (let p of this.profiles) {
+            if (p.outputService === oldItem) {
+                p.setOutputService(newItem);
+            }
+        }
+    };
 
     public loadData(): void {
         let data = localStorage.getItem("tcts2");

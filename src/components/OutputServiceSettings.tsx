@@ -4,6 +4,7 @@ import OutputService from "../outputServices/outputService";
 import OutputServiceProvider from "../outputServices/outputServiceProvider/outputServiceProvider";
 import { useProviderRegistryContext } from "../contexts/ProviderRegistryContext";
 import useLifecycle from "../hooks/useLifecycle";
+import ErrorList from "./ErrorList";
 
 type OnConfirmCallbackType = (service: OutputService) => void;
 type OnCancelCallbackType = (service: OutputService) => void;
@@ -131,7 +132,8 @@ const OutputServiceSettings = ({
 }) => {
     let [service, setService] = useState<OutputService>(originalService);
     let [serviceProvider, setServiceProvider] =
-        useState<OutputServiceProvider | null>(null);
+            useState<OutputServiceProvider | null>(null);
+    let [ errors, setErrors ] = useState<Array<string>>([]);
 
     useLifecycle(() => {
         if (editing) {
@@ -156,6 +158,14 @@ const OutputServiceSettings = ({
         let errorList: Array<string> = [];
         if (!service.name || service.name === "") {
             errorList.push("An output service must have a unique name.");
+        }
+        if (!service.serviceProvider) {
+            errors.push("An output service must have a service provider selected.");
+        }
+
+        setErrors(errorList);
+        if (errorList.length > 0) {
+            return;
         }
 
         if (service) onConfirm(service);
@@ -186,6 +196,7 @@ const OutputServiceSettings = ({
                     <OutputSettings serviceProvider={serviceProvider} />
                 </TabPanel>
             </Tabs>
+            {errors.length > 0 && <ErrorList errors={errors} />}
             <button onClick={handleConfirm}>Save</button>
             <button onClick={handleCancel}>Cancel</button>
         </>

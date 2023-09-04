@@ -43,8 +43,8 @@ const AppContainer = () => {
             //Typescript is being overly restrictive here
             tabManager.addEventListener("change", handleTabManagerChange as EventListener);
             data.profiles.addEventListener("change", handleProfilesChange as EventListener);
-            data.profiles.addEventListener("replace", handleProfilesReplace as EventListener);
             data.profiles.addEventListener("remove", handleProfilesRemove as EventListener);
+            data.profiles.addEventListener("replace", handleProfilesReplace as EventListener);
 
             return () => {
                 tabManager.removeEventListener("change", handleTabManagerChange as EventListener);

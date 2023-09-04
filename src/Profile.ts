@@ -57,4 +57,12 @@ export default class Profile {
         }
         return errors;
     }
-}
+
+    setOutputService(service: OutputService | null): void {
+        this.outputService = service;
+        if (service) {
+            this.outputSettings = structuredClone(service.serviceProvider?.outputSettings);
+        }
+    }
+
+};
