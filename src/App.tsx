@@ -37,9 +37,6 @@ const App = () => {
                 setAppState(AppState.Error);
                 console.error(e);
                 setAppError("Saved data could not be loaded.\n\n" + e);
-                while (appState === AppState.Error) {
-                    //just kind of sit here doing nothing.
-                }
             }
             data.actionQueue.run();
             setAppState(AppState.Loaded);
