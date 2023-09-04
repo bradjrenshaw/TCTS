@@ -51,7 +51,7 @@ const ProfileView = ({ profile}: { profile: Profile}) => {
             {profile.chatService && <ChatInput profile={profile} />}
         </>
     );
-    } else if (action === Action.Settings) {
+    } else {
         return <Modal visible onClose={handleProfileCancel}>
 <ProfileSettings editing originalProfile={profile} onCancel={handleProfileCancel} onConfirm={handleProfileSave} />
 </Modal>
