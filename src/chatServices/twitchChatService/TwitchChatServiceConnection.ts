@@ -29,34 +29,20 @@ export default class TwitchChatServiceConnection extends ChatServiceConnection {
             token: this.authToken,
         });
         this.connected = false;
+        this.receivedEvent = this.receivedEvent.bind(this);
     }
 
     async connect(): Promise<boolean> {
         await this.chat.connect();
         await this.chat.join(this.channel);
         this.connected = true;
-        this.chat.on(ChatEvents.ALL, (message) => {
-            let chatEvent = new ChatEvent(
-                null,
-                "all",
-                (event: OutputEvent) => [
-                    new OutputMessageAction(this.profile, event),
-                ],
-                (message: any) => {
-                    return {
-                        text: message.tags.displayName
-                            ? message.tags.displayName + ": " + message.message
-                            : undefined,
-                    };
-                },
-            );
-            this.processChatEvent(chatEvent, message);
-        });
+        this.chat.on(ChatEvents.ALL, this.receivedEvent);
         return true;
     }
 
     async disconnect(): Promise<void> {
         await this.chat.disconnect();
+        this.chat.off(ChatEvents.ALL, this.receivedEvent);
         this.connected = false;
     }
 
@@ -66,5 +52,23 @@ export default class TwitchChatServiceConnection extends ChatServiceConnection {
 
     processChatEvent(event: ChatEvent, message: any): void {
         this.processOutputEvent(new OutputEvent(this.profile, event, message));
+    }
+
+    receivedEvent(message: any): void {
+        let chatEvent = new ChatEvent(
+            null,
+            "all",
+            (event: OutputEvent) => [
+                new OutputMessageAction(this.profile, event),
+            ],
+            (message: any) => {
+                return {
+                    text: message.tags.displayName
+                        ? message.tags.displayName + ": " + message.message
+                        : undefined,
+                };
+            },
+        );
+        this.processChatEvent(chatEvent, message);
     }
 }

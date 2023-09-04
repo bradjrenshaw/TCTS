@@ -1,10 +1,10 @@
 import { useState } from "react";
-import DataManager from "../DataManager";
 import Profile from "../Profile";
 import ProfileSettings from "./ProfileSettings";
 import { useDataContext } from "../contexts/DataContext";
 import Modal from "./Modal";
 import ChatServiceConnectDisconnectButton from "./ChatServiceConnectDisconnectButton";
+import DataManager from "../DataManager";
 
 enum Action {
     List,
@@ -51,7 +51,6 @@ const ProfileList = ({
     profiles: Array<Profile>;
     onAction: any;
 }) => {
-    let dataManager = useDataContext();
     let onAddClick = () => {
         let profile: Profile = new Profile(dataManager);
         onAction(Action.Add, profile);
@@ -85,16 +84,14 @@ const ProfileList = ({
     );
 };
 
-const ProfilePanel = () => {
+const ProfilePanel = ({profiles}: {profiles: Array<Profile>}) => {
     let data: DataManager = useDataContext();
     let [action, setAction] = useState(Action.List);
     let [actionProfile, setActionProfile] = useState<Profile | null>(null);
-    let [profiles, setProfiles] = useState([...data.profiles]);
 
     const handleNewProfileSave = (profile: Profile) => {
         data.addProfile(profile);
         data.saveData();
-        setProfiles([...data.profiles]);
         setAction(Action.List);
     };
 
@@ -102,7 +99,6 @@ const ProfilePanel = () => {
         if (!actionProfile) return;
         data.replaceProfile(actionProfile, profile);
         data.saveData();
-        setProfiles([...data.profiles]);
         setAction(Action.List);
     };
 
@@ -114,10 +110,8 @@ const ProfilePanel = () => {
             setAction(Action.Edit);
             setActionProfile(target);
         } else if (action === Action.Delete) {
-            console.log("Calling delete on profile " + target.name);
             data.removeProfile(target);
             data.saveData();
-            setProfiles([...data.profiles]);
             setActionProfile(null);
             setAction(Action.List);
         }

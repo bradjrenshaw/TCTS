@@ -1,20 +1,24 @@
-type UpdateCallback = (items: Array<any>) => void;
+import UniqueItemListEvent from "./events/UniqueItemListEvent";
 
-export default class UniqueItemList<T> {
+type ItemComparisonFunc = (a: any, b: any) => boolean;
+
+export default class UniqueItemList<T> extends EventTarget {
+
     items: Array<T>;
     strict: boolean;
-    updateCallback: UpdateCallback | null;
+    comparisonFunc: ItemComparisonFunc | null;
     length: number;
     defaultItem: T | undefined;
 
     constructor(
         items: Array<T> | undefined = undefined,
         strict: boolean = false,
-        updateCallback: UpdateCallback | null = null,
+        comparisonFunc: ItemComparisonFunc | null = null
     ) {
+        super();
         this.items = items ? items : [];
         this.strict = strict;
-        this.updateCallback = updateCallback;
+        this.comparisonFunc = comparisonFunc;
         this.defaultItem = items ? items[0] : undefined;
         this.length = 0;
     }
@@ -41,7 +45,7 @@ export default class UniqueItemList<T> {
 
     push(item: T): void {
         for (let i of this.items) {
-            if (i === item) {
+            if ((this.comparisonFunc && this.comparisonFunc(item, i)) || i === item) {
                 if (this.strict)
                     throw new Error(
                         "item " +
@@ -55,7 +59,8 @@ export default class UniqueItemList<T> {
         this.items = this.items.concat([item]);
         this.length = this.items.length;
         if (!this.defaultItem) this.defaultItem = item;
-        if (this.updateCallback) this.updateCallback(this.items);
+        this.dispatchEvent(new UniqueItemListEvent<T>("push", [item]));
+        this.dispatchEvent(new UniqueItemListEvent<T>("change", this.items));
     }
 
     remove(item: T) {
@@ -75,7 +80,8 @@ export default class UniqueItemList<T> {
         this.length = this.items.length;
         if (this.defaultItem === item)
             this.defaultItem = this.length > 0 ? this.items[0] : undefined;
-        if (this.updateCallback) this.updateCallback(this.items);
+        this.dispatchEvent(new UniqueItemListEvent<T>("remove", [item]));
+        this.dispatchEvent(new UniqueItemListEvent<T>("change", this.items));
     }
 
     replace(oldItem: T, newItem: T) {
@@ -85,7 +91,9 @@ export default class UniqueItemList<T> {
         this.items = [...this.items];
         if (this.defaultItem === oldItem)
             this.defaultItem = this.length > 0 ? this.items[0] : undefined;
-        if (this.updateCallback) this.updateCallback(this.items);
+        this.dispatchEvent(new UniqueItemListEvent<T>("replace", [oldItem, newItem]));
+        this.dispatchEvent(new UniqueItemListEvent<T>("change", this.items));
         return true;
     }
-}
+
+};
