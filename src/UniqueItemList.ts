@@ -3,7 +3,6 @@ import UniqueItemListEvent from "./events/UniqueItemListEvent";
 type ItemComparisonFunc = (a: any, b: any) => boolean;
 
 export default class UniqueItemList<T> extends EventTarget {
-
     items: Array<T>;
     strict: boolean;
     comparisonFunc: ItemComparisonFunc | null;
@@ -13,7 +12,7 @@ export default class UniqueItemList<T> extends EventTarget {
     constructor(
         items: Array<T> | undefined = undefined,
         strict: boolean = false,
-        comparisonFunc: ItemComparisonFunc | null = null
+        comparisonFunc: ItemComparisonFunc | null = null,
     ) {
         super();
         this.items = items ? items : [];
@@ -45,7 +44,10 @@ export default class UniqueItemList<T> extends EventTarget {
 
     push(item: T): void {
         for (let i of this.items) {
-            if ((this.comparisonFunc && this.comparisonFunc(item, i)) || (!this.comparisonFunc && i === item)) {
+            if (
+                (this.comparisonFunc && this.comparisonFunc(item, i)) ||
+                (!this.comparisonFunc && i === item)
+            ) {
                 if (this.strict)
                     throw new Error(
                         "item " +
@@ -91,9 +93,10 @@ export default class UniqueItemList<T> extends EventTarget {
         this.items = [...this.items];
         if (this.defaultItem === oldItem)
             this.defaultItem = this.length > 0 ? this.items[0] : undefined;
-        this.dispatchEvent(new UniqueItemListEvent<T>("replace", [oldItem, newItem]));
+        this.dispatchEvent(
+            new UniqueItemListEvent<T>("replace", [oldItem, newItem]),
+        );
         this.dispatchEvent(new UniqueItemListEvent<T>("change", this.items));
         return true;
     }
-
-};
+}

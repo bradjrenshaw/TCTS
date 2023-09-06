@@ -66,7 +66,7 @@ export default class TwitchChatServiceConnection extends ChatServiceConnection {
             ],
             (message: any) => {
                 return {
-                    text: this.username + ": " + message
+                    text: this.username + ": " + message,
                 };
             },
         );
@@ -82,9 +82,10 @@ export default class TwitchChatServiceConnection extends ChatServiceConnection {
             ],
             (message: any) => {
                 return {
-                    text: message.tags.displayName && message.message
-                        ? message.tags.displayName + ": " + message.message
-                        : undefined,
+                    text:
+                        message.tags.displayName && message.message
+                            ? message.tags.displayName + ": " + message.message
+                            : undefined,
                 };
             },
         );

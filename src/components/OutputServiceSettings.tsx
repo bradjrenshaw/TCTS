@@ -132,8 +132,8 @@ const OutputServiceSettings = ({
 }) => {
     let [service, setService] = useState<OutputService>(originalService);
     let [serviceProvider, setServiceProvider] =
-            useState<OutputServiceProvider | null>(null);
-    let [ errors, setErrors ] = useState<Array<string>>([]);
+        useState<OutputServiceProvider | null>(null);
+    let [errors, setErrors] = useState<Array<string>>([]);
 
     useLifecycle(() => {
         if (editing) {
@@ -160,7 +160,9 @@ const OutputServiceSettings = ({
             errorList.push("An output service must have a unique name.");
         }
         if (!service.serviceProvider) {
-            errors.push("An output service must have a service provider selected.");
+            errors.push(
+                "An output service must have a service provider selected.",
+            );
         }
 
         setErrors(errorList);

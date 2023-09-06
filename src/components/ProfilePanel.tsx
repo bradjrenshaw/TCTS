@@ -85,7 +85,7 @@ const ProfileList = ({
     );
 };
 
-const ProfilePanel = ({profiles}: {profiles: Array<Profile>}) => {
+const ProfilePanel = ({ profiles }: { profiles: Array<Profile> }) => {
     let data: DataManager = useDataContext();
     let [action, setAction] = useState(Action.List);
     let [actionProfile, setActionProfile] = useState<Profile | null>(null);

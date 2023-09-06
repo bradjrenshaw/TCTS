@@ -56,7 +56,6 @@ const App = () => {
         setup();
     });
 
-
     if (appState === AppState.Loading) {
         return <p>Loading</p>;
     } else if (appState === AppState.Error) {
@@ -71,8 +70,14 @@ const App = () => {
         return (
             <DataContext.Provider value={data}>
                 <ProviderRegistryContext.Provider value={providerRegistry}>
-                    <p>You are using an early TCTS Alpha. To use the old prototype, go <a href="/old">here</a>.</p>
-                    <p>For documentation, go <a href="https://github.com/bradjrenshaw/tcts">here</a>.</p>
+                    <p>
+                        You are using an early TCTS Alpha. To use the old
+                        prototype, go <a href="/old">here</a>.
+                    </p>
+                    <p>
+                        For documentation, go{" "}
+                        <a href="https://github.com/bradjrenshaw/tcts">here</a>.
+                    </p>
                     <AppContainer />
                 </ProviderRegistryContext.Provider>
             </DataContext.Provider>

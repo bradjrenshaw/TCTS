@@ -9,12 +9,12 @@ import ChatInput from "./ChatInput";
 
 enum Action {
     View,
-    Settings
-};
+    Settings,
+}
 
-const ProfileView = ({ profile}: { profile: Profile}) => {
+const ProfileView = ({ profile }: { profile: Profile }) => {
     let data: DataManager = useDataContext();
-    let [ action, setAction ] = useState<Action>(Action.View);
+    let [action, setAction] = useState<Action>(Action.View);
 
     const handleProfileCancel = () => {
         setAction(Action.View);
@@ -37,24 +37,35 @@ const ProfileView = ({ profile}: { profile: Profile}) => {
         };
         changeProfile();
     };
-    
-    const handleSettingsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+    const handleSettingsClick = (
+        event: React.MouseEvent<HTMLButtonElement>,
+    ) => {
         setAction(Action.Settings);
     };
 
     if (action === Action.View) {
-    return (
-        <>
-            <h1>{profile.name}</h1>
-            <button onClick={handleSettingsClick}>Settings</button><br /><br />
-            <OutputHistory profile={profile} />
-            {profile.chatService && <ChatInput profile={profile} />}
-        </>
-    );
+        return (
+            <>
+                <h1>{profile.name}</h1>
+                <button onClick={handleSettingsClick}>Settings</button>
+                <br />
+                <br />
+                <OutputHistory profile={profile} />
+                {profile.chatService && <ChatInput profile={profile} />}
+            </>
+        );
     } else {
-        return <Modal visible onClose={handleProfileCancel}>
-<ProfileSettings editing originalProfile={profile} onCancel={handleProfileCancel} onConfirm={handleProfileSave} />
-</Modal>
+        return (
+            <Modal visible onClose={handleProfileCancel}>
+                <ProfileSettings
+                    editing
+                    originalProfile={profile}
+                    onCancel={handleProfileCancel}
+                    onConfirm={handleProfileSave}
+                />
+            </Modal>
+        );
     }
 };
 

@@ -3,7 +3,6 @@ import OutputService from "./outputServices/outputService";
 import DataManager from "./DataManager";
 import UniqueItemList from "./UniqueItemList";
 
-
 export default class Profile {
     name: string;
     outputSettings: any;
@@ -26,7 +25,11 @@ export default class Profile {
         this.outputService = outputService;
 
         //We will need a new ItemList class later
-        this.outputHistory = new UniqueItemList<string>([], false, (a: string, b: string) => false);
+        this.outputHistory = new UniqueItemList<string>(
+            [],
+            false,
+            (a: string, b: string) => false,
+        );
     }
 
     clone(): Profile {
@@ -40,7 +43,11 @@ export default class Profile {
         if (this.outputService)
             profile.outputService = this.outputService.clone();
         let history = [...this.outputHistory];
-        profile.outputHistory = new UniqueItemList<string>(history, false, (a: string, b: string) => false);
+        profile.outputHistory = new UniqueItemList<string>(
+            history,
+            false,
+            (a: string, b: string) => false,
+        );
         return profile;
     }
 
@@ -73,8 +80,9 @@ export default class Profile {
     setOutputService(service: OutputService | null): void {
         this.outputService = service;
         if (service) {
-            this.outputSettings = structuredClone(service.serviceProvider?.outputSettings);
+            this.outputSettings = structuredClone(
+                service.serviceProvider?.outputSettings,
+            );
         }
     }
-
-};
+}

@@ -33,4 +33,4 @@ export default class OutputMessageAction extends OutputAction {
             this.complete();
         }
     }
-};
+}
