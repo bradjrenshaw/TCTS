@@ -9,6 +9,7 @@ import TwitchChatService from "./chatServices/twitchChatService/TwitchChatServic
 import useLifecycle from "./hooks/useLifecycle";
 import WebSpeechOutputServiceProvider from "./outputServices/webSpeechOutputServiceProvider/webSpeechOutputServiceProvider";
 import BlockingErrorMessage from "./components/BlockingErrorMessage";
+import OutputService from "./outputServices/outputService";
 
 enum AppState {
     Loading,
@@ -21,6 +22,16 @@ const App = () => {
     let [data] = useState(new DataManager(providerRegistry));
     let [appState, setAppState] = useState<AppState>(AppState.Loading);
     let [appError, setAppError] = useState<string>("");
+
+    const handleAppLoad = () => {
+        setAppState(AppState.Loaded);
+        if (data.outputServices.length === 0) {
+            let provider = new WebSpeechOutputServiceProvider();
+            let service = new OutputService(data, "Web TTS", provider);
+            data.addOutputService(service);
+            data.saveData();
+        }
+    };
 
     useLifecycle(() => {
         const setup = async () => {
@@ -40,14 +51,11 @@ const App = () => {
                 setAppError("Saved data could not be loaded.\n\n" + e);
                 return;
             }
-            setAppState(AppState.Loaded);
+            handleAppLoad();
         };
         setup();
     });
 
-    const handleErrorClose = () => {
-        setAppState(AppState.Loaded);
-    };
 
     if (appState === AppState.Loading) {
         return <p>Loading</p>;
@@ -56,7 +64,7 @@ const App = () => {
             <BlockingErrorMessage
                 header="error"
                 message={appError}
-                onClose={handleErrorClose}
+                onClose={handleAppLoad}
             />
         );
     } else {
