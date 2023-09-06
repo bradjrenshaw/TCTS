@@ -30,6 +30,7 @@ const App = () => {
                 WebSpeechOutputServiceProvider,
             );
             await data.initialize();
+            data.actionQueue.run();
 
             try {
                 data.loadData();
@@ -37,15 +38,15 @@ const App = () => {
                 setAppState(AppState.Error);
                 console.error(e);
                 setAppError("Saved data could not be loaded.\n\n" + e);
+                return;
             }
-            data.actionQueue.run();
             setAppState(AppState.Loaded);
         };
         setup();
     });
 
     const handleErrorClose = () => {
-        setAppState(AppState.Loading);
+        setAppState(AppState.Loaded);
     };
 
     if (appState === AppState.Loading) {
@@ -62,6 +63,8 @@ const App = () => {
         return (
             <DataContext.Provider value={data}>
                 <ProviderRegistryContext.Provider value={providerRegistry}>
+                    <p>You are using an early TCTS Alpha. To use the old prototype, go <a href="/old">here</a>.</p>
+                    <p>For documentation, go <a href="https://github.com/bradjrenshaw/tcts">here</a>.</p>
                     <AppContainer />
                 </ProviderRegistryContext.Provider>
             </DataContext.Provider>
