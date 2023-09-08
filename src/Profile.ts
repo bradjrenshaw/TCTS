@@ -22,7 +22,7 @@ export default class Profile {
         this.dataManager = dataManager;
         this.outputSettings = outputSettings ? outputSettings : {};
         this.chatService = chatService;
-        this.outputService = outputService;
+        this.setOutputService(outputService);
 
         //We will need a new ItemList class later
         this.outputHistory = new UniqueItemList<string>(
@@ -30,6 +30,11 @@ export default class Profile {
             false,
             (a: string, b: string) => false,
         );
+
+        if (!this.outputService) {
+            let service = this.dataManager.outputServices.getDefault();
+            if (service) this.setOutputService(service);
+        }
     }
 
     clone(): Profile {
@@ -70,9 +75,13 @@ export default class Profile {
         let errors: Array<string> = [];
         if (this.chatService) {
             errors = errors.concat(this.chatService.getUIErrors());
+        } else {
+            errors.push("Profile has no chat service set.");
         }
         if (this.outputService) {
             errors = errors.concat(this.outputService.getUIErrors());
+        } else {
+            errors.push("Profile has no output service set.");
         }
         return errors;
     }
