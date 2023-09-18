@@ -69,17 +69,28 @@ export default class WebSpeechOutputServiceProvider extends OutputServiceProvide
         };
     }
 
-    output(action: OutputMessageAction): void {
-        let outputSettings = action.profile.outputSettings;
-        let utterence = new SpeechSynthesisUtterance(
-            action.event.variables.text,
-        );
+    outputMessage(message: any, outputSettings: any): any {
+        let utterence = new SpeechSynthesisUtterance(message.text);
         utterence.voice =
             WebSpeechOutputServiceProvider.voices[outputSettings.voice];
         utterence.volume = outputSettings.volume;
         utterence.rate = outputSettings.rate;
         utterence.pitch = outputSettings.pitch;
         window.speechSynthesis.speak(utterence);
+        return utterence;
+    }
+
+    output(action: OutputMessageAction): void {
+        let outputSettings = action.profile.outputSettings;
+        let message = {
+            text: action.event.variables.text,
+        };
+
+        let utterence: SpeechSynthesisUtterance = this.outputMessage(
+            message,
+            outputSettings,
+        );
+
         utterence.onend = () => {
             action.complete();
         };

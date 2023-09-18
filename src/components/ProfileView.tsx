@@ -6,6 +6,7 @@ import DataManager from "../DataManager";
 import { useDataContext } from "../contexts/DataContext";
 import OutputHistory from "./OutputHistory";
 import ChatInput from "./ChatInput";
+import OutputMessageAction from "../outputActions/OutputMessageAction";
 
 enum Action {
     View,
@@ -44,12 +45,27 @@ const ProfileView = ({ profile }: { profile: Profile }) => {
         setAction(Action.Settings);
     };
 
+    const handleTestOutputClick = (
+        event: React.MouseEvent<HTMLButtonElement>,
+    ) => {
+        profile.outputService?.serviceProvider?.outputMessage(
+            { text: "This is a test of your text to speech settings." },
+            profile.outputSettings,
+        );
+    };
+
     if (action === Action.View) {
         return (
             <>
                 <h1>{profile.name}</h1>
                 <button onClick={handleSettingsClick}>Settings</button>
                 <br />
+                <button
+                    disabled={!profile.outputService}
+                    onClick={handleTestOutputClick}
+                >
+                    Test Output
+                </button>
                 <br />
                 <OutputHistory profile={profile} />
                 {profile.chatService && <ChatInput profile={profile} />}

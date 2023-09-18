@@ -17,10 +17,21 @@ export default class DataManager {
         this.outputServices = new UniqueItemList<OutputService>();
         this.profiles = new UniqueItemList<Profile>();
         this.actionQueue = new ActionQueue(this);
+        this.handleProfilesChange = this.handleProfilesChange.bind(this);
+        this.handleOutputServicesChange =
+            this.handleOutputServicesChange.bind(this);
         this.handleOutputServicesRemove =
             this.handleOutputServicesRemove.bind(this);
         this.handleOutputServicesReplace =
             this.handleOutputServicesReplace.bind(this);
+        this.profiles.addEventListener(
+            "change",
+            this.handleProfilesChange as EventListener,
+        );
+        this.outputServices.addEventListener(
+            "change",
+            this.handleOutputServicesChange as EventListener,
+        );
         this.outputServices.addEventListener(
             "remove",
             this.handleOutputServicesRemove as EventListener,
@@ -48,15 +59,18 @@ export default class DataManager {
         let profileName = data.name;
         let outputSettings = data.outputSettings;
         let chatServiceData = data.chatService;
-        let profile = new Profile(this, profileName, outputSettings);
+        let outputService = null;
         if (data.outputServiceName) {
             for (let s of this.outputServices) {
                 if (s.name === data.outputServiceName) {
-                    profile.outputService = s;
+                    outputService = s;
                     break;
                 }
             }
         }
+
+        let profile = new Profile(this, profileName, outputSettings);
+
         if (chatServiceData && Object.keys(chatServiceData).length > 0) {
             let chatServiceType: typeof ChatService =
                 this.providerRegistry.chatServices[chatServiceData.name];
@@ -73,6 +87,7 @@ export default class DataManager {
                 chatServiceData,
             );
         }
+
         this.addProfile(profile);
     }
 
@@ -108,6 +123,16 @@ export default class DataManager {
         return this.outputServices.replace(original, replacement);
     }
 
+    private handleProfilesChange(event: UniqueItemListEvent<Profile>): void {
+        this.saveData();
+    }
+
+    private handleOutputServicesChange(
+        event: UniqueItemListEvent<Profile>,
+    ): void {
+        this.saveData();
+    }
+
     private handleOutputServicesRemove(
         event: UniqueItemListEvent<OutputService>,
     ): void {
@@ -133,7 +158,10 @@ export default class DataManager {
     public loadData(): void {
         let data = localStorage.getItem("tcts2");
         if (data) {
-            this.deserializeInPlace(JSON.parse(data));
+            let parsedData = JSON.parse(data);
+            console.log("Load data parsed");
+            console.log(parsedData);
+            this.deserializeInPlace(parsedData);
         }
     }
 

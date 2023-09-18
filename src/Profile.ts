@@ -7,7 +7,7 @@ export default class Profile {
     name: string;
     outputSettings: any;
     chatService: ChatService | null;
-    outputService: OutputService | null;
+    outputService: OutputService | null = null;
     readonly dataManager: DataManager;
     outputHistory: UniqueItemList<string>;
 
@@ -87,11 +87,11 @@ export default class Profile {
     }
 
     setOutputService(service: OutputService | null): void {
-        this.outputService = service;
-        if (service) {
+        if (service && this.outputService !== null) {
             this.outputSettings = structuredClone(
                 service.serviceProvider?.outputSettings,
             );
         }
+        this.outputService = service;
     }
 }

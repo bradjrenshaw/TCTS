@@ -24,5 +24,7 @@ export default abstract class OutputServiceProvider {
 
     abstract ServiceSettingsComponent(): any;
 
+    abstract outputMessage(message: any, outputSettings: any): any;
+
     abstract output(action: OutputMessageAction): void;
 }
