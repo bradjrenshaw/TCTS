@@ -43,7 +43,7 @@ export default class ActionQueue {
         } else {
             //This is required due to Chrome's handling of Web TTS.
             //The call to cancel is required to keep the speech synthesis active. If this isn't used, the onEnd events or calls to speak stop responding until the browser is focused after a few seconds of inactivity.
-            window.speechSynthesis.cancel();
+            if (!window.speechSynthesis.speaking) window.speechSynthesis.cancel();
         }
         if (!this.currentAction) {
             this.currentAction = this.pop();
